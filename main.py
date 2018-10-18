@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://get-it-done:beproductive@localhost:8889/get-it-done'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:buildablog@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 app.secret_key = "secretkey"
@@ -31,6 +31,15 @@ class User(db.Model):
     def __init__(self, email, password):
         self.email = email
         self.password = password
+
+class Entry(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    blogtitle = db.Column(db.String(120), unique=True)
+    blogcontent = db.Column(db.String(400))
+
+    def __init__(self, blogtitle, blogcontent):
+        self.blogtitle = blogtitle
+        self.blogcontent = blogcontent
 
 @app.before_request
 def require_login():
@@ -67,6 +76,32 @@ def register():
         # TODO - validate user's data
 
         existing_user = User.query.filter_by(email=email).first()
+        if not existing_user:
+            new_user = User(email, password)
+            db.session.add(new_user)
+            db.session.commit()
+            # TODO - "remember" the user
+            session['email'] = email
+            return redirect("/")
+        else:
+            # TODO - user better response messaging
+            return "<h1>Duplicate user</h1>"
+
+    return render_template('register.html')
+
+@app.route('/mainblogpage')
+def gomain():
+    return redirect('/')
+
+@app.route('newpost')
+def newpost():
+    if request.method == 'POST':
+        blogtitle = request.form['blogtitle']
+        blogcontent = request.form['blogcontent']
+        verify = request.form['verify']
+
+        # TODO - validate user's data
+
         if not existing_user:
             new_user = User(email, password)
             db.session.add(new_user)
