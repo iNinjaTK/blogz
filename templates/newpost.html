@@ -4,7 +4,7 @@
 {% block content %}
 <h1>Add a Blog Entry</h1>
 <br>
-<form action="/newpost" method="post">
+<form action="/newpost" method="POST">
     <table>
         <tr>
             <td>
@@ -13,7 +13,12 @@
         </tr>
         <tr>
             <td>
-                <input name="blogtitle" type="text">
+                <input id="blogtitle" type="text" name="blogtitle" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p class="error">{{blogtitle_error}}</p>
             </td>
         </tr>
 
@@ -27,7 +32,12 @@
         </tr>
         <tr>
             <td>
-                <input name="blogcontent" type="text" width="300" height="400">
+                <input id="blogcontent" type="text" name="blogcontent" width="300" height="400" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p class="error">{{blogcontent_error}}</p>
             </td>
         </tr>
     </table>

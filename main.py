@@ -8,150 +8,53 @@ app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 app.secret_key = "secretkey"
 
-
-
-class Task(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120))
-    completed = db.Column(db.Boolean)
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def __init__(self, name, owner):
-        self.name = name
-        self.completed = False
-        self.owner = owner
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(120))
-    tasks = db.relationship('Task', backref='owner')
-
-    def __init__(self, email, password):
-        self.email = email
-        self.password = password
-
 class Entry(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    blogtitle = db.Column(db.String(120), unique=True)
+    blogtitle = db.Column(db.String(120))
     blogcontent = db.Column(db.String(400))
 
     def __init__(self, blogtitle, blogcontent):
         self.blogtitle = blogtitle
         self.blogcontent = blogcontent
 
-@app.before_request
-def require_login():
-    allowed_routes = ['login', 'register']
-    if request.endpoint not in allowed_routes and 'email' not in session:
-        return redirect('/login')
-
-
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        user = User.query.filter_by(email=email).first()
-        if user and user.password == password:
-            # TODO - "remember" that the user has logged in
-            session['email'] = email
-            flash("Logged In")
-            return redirect('/')
-
-        else:
-            # TODO - explain why login failed
-            flash("User password incorrect, or user does not exist", 'error')
-
-    return render_template('login.html')
-
-@app.route('/register', methods=['POST', 'GET'])
-def register():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        verify = request.form['verify']
-
-        # TODO - validate user's data
-
-        existing_user = User.query.filter_by(email=email).first()
-        if not existing_user:
-            new_user = User(email, password)
-            db.session.add(new_user)
-            db.session.commit()
-            # TODO - "remember" the user
-            session['email'] = email
-            return redirect("/")
-        else:
-            # TODO - user better response messaging
-            return "<h1>Duplicate user</h1>"
-
-    return render_template('register.html')
-
-@app.route('/mainblogpage')
-def gomain():
-    return redirect('/')
-
-@app.route('newpost')
+@app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
     if request.method == 'POST':
         blogtitle = request.form['blogtitle']
         blogcontent = request.form['blogcontent']
-        verify = request.form['verify']
+        blogtitle_error = ''
+        blogcontent_error = ''
 
         # TODO - validate user's data
 
-        if not existing_user:
-            new_user = User(email, password)
-            db.session.add(new_user)
+        if blogtitle == '':
+            blogtitle_error = 'Please fill in the title'
+        if blogcontent == '':
+            blogcontent_error = 'Please fill in the body'
+
+        if not blogtitle_error and not blogcontent_error:
+            new_entry = Entry(blogtitle, blogcontent)
+            db.session.add(new_entry)
             db.session.commit()
-            # TODO - "remember" the user
-            session['email'] = email
-            return redirect("/")
+            return redirect('/blog')
         else:
-            # TODO - user better response messaging
-            return "<h1>Duplicate user</h1>"
+            return render_template('newpost.html',
+            title='Add a Blog',
+            blogtitle=blogtitle,
+            blogcontent=blogcontent,
+            blogtitle_error=blogtitle_error,
+            blogcontent_error=blogcontent_error)
+    return render_template('newpost.html')
 
-    return render_template('register.html')
-
-@app.route('/logout')
-def logout():
-    del session['email']
-    return redirect('/')
-
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/blog', methods=['POST', 'GET'])
 def index():
+
+    entries = Entry.query.all()
     
-    owner = User.query.filter_by(email=session['email']).first()
+    return render_template('blog.html',
+        title="Build a Blog",
+        entries=entries)
 
-    if request.method == 'POST':
-        task_name = request.form['task']
-        new_task = Task(task_name, owner)
-        db.session.add(new_task)
-        db.session.commit()
-
-    tasks = Task.query.filter_by(completed=False,owner=owner).all()
-    completed_tasks = Task.query.filter_by(completed=True,owner=owner).all()
-    
-    return render_template('todos.html',title="Get It Done!", 
-        tasks=tasks, completed_tasks=completed_tasks)
-
-
-
-@app.route('/delete-task', methods=['POST'])
-def delete_task():
-
-    task_id = int(request.form['task-id'])
-    task = Task.query.get(task_id)
-    task.completed = True
-    db.session.add(task)
-    db.session.commit()
-
-    #db.session.delete(task)
-    #db.session.commit()
-
-    return redirect('/')
 
 if __name__ == '__main__':
     app.run()

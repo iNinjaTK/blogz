@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<h1>Build a Blog</h1>
+<br>
+
+{% if entries|length == 0 %}
+
+<h2>
+    No Blog Entries Yet
+</h2>
+<p>
+    Please click "Add a Blog Entry" to get started with your
+    first blog entry!
+</p>
+
+{% else %}
+
+<!--    <ul>
+            {% for task in tasks %}
+            <li>{{task.name}}
+                <form method="POST" action="/delete-task" style="display:inline-block;">
+                    <input type="hidden" name="task-id" value="{{task.id}}" />
+                    <input type="submit" value="Done!" />
+                </form>
+            </li>
+            {% endfor %}
+        </ul> -->
+
+{% for posts in entries %}
+<!-- <form method="GET" style="display:inline-block;"> -->
+<h2>{{posts.blogtitle}}</h2>
+<p>{{posts.blogcontent}}</p>
+<hr />
+
+        <!-- </form> -->
+
+{% endfor %}
+
+{% endif %}
+
+<!--<ul>
+        {% for task in completed_tasks %}
+        <li>{{task.name}}</li>
+        {% endfor %}
+    </ul> -->
+
+{% endblock %}
