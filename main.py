@@ -17,6 +17,10 @@ class Entry(db.Model):
         self.blogtitle = blogtitle
         self.blogcontent = blogcontent
 
+@app.route('/', methods=['GET'])
+def index():
+    return redirect('/blog')
+
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
     if request.method == 'POST':
@@ -36,7 +40,9 @@ def newpost():
             new_entry = Entry(blogtitle, blogcontent)
             db.session.add(new_entry)
             db.session.commit()
-            return redirect('/blog')
+            return render_template('postpage.html',
+            title=new_entry.blogtitle,
+            content=new_entry.blogcontent)
         else:
             return render_template('newpost.html',
             title='Add a Blog',
@@ -46,15 +52,19 @@ def newpost():
             blogcontent_error=blogcontent_error)
     return render_template('newpost.html')
 
-@app.route('/blog', methods=['POST', 'GET'])
-def index():
-
-    entries = Entry.query.all()
+@app.route('/blog', methods=['GET'])
+def blog():
     
-    return render_template('blog.html',
+    if request.method == 'GET' and request.args.get('id'):
+        entry = Entry.query.filter_by(id=request.args.get('id')).first()
+        return render_template('postpage.html',
+        title=entry.blogtitle,
+        content=entry.blogcontent)
+    else:
+        entries = Entry.query.all()
+        return render_template('blog.html',
         title="Build a Blog",
         entries=entries)
-
 
 if __name__ == '__main__':
     app.run()

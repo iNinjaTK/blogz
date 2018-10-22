@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<br>
-<h1>Build a Blog</h1>
-<br>
 
 {% if entries|length == 0 %}
 
@@ -29,12 +26,12 @@
         </ul> -->
 
 {% for posts in entries %}
-<!-- <form method="GET" style="display:inline-block;"> -->
-<h2>{{posts.blogtitle}}</h2>
+<form method="POST">
+<a href='/blog?id={{posts.id}}'><h2>{{posts.blogtitle}}</h2></a>
 <p>{{posts.blogcontent}}</p>
 <hr />
 
-        <!-- </form> -->
+</form>
 
 {% endfor %}
 
