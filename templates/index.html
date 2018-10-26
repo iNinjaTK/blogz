@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if users|length == 0 %}
+
+<h2>
+    No Blog Users Yet
+</h2>
+<p>
+    Please sign up to get started on your first blog!
+</p>
+
+{% else %}
+
+<ul>
+
+{% for author in users %}
+<form method="POST">
+<a href='/blog?user={{author.id}}'><li>{{author.username}}</li></a>
+</form>
+
+{% endfor %}
+
+</ul>
+
+{% endif %}
+
+{% endblock %}
