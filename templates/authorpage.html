@@ -2,31 +2,14 @@
 
 {% block content %}
 
-{% if entries|length == 0 %}
-
-<h2>
-    No Blog Entries Yet
-</h2>
-<p>
-    Please click "Add a Blog Entry" to get started with your
-    first blog entry!
-</p>
-
-{% else %}
-
 <h1>It's working alright</h1>
 
-<!-- {% for posts in entries %}
-<form method="POST"></form>
-    <a href='/blog?id={{posts.id}}'><h2>{{posts.blogtitle}}</h2></a>
-    <p>{{posts.blogcontent}}</p>
-    <p>written by <a href='/blog?user={{posts.owner_id}}'>{{posts.owner.username}}</a>  </p>
+{% for posts in entries %}
+<a href='/blog?id={{posts.id}}'><h2>{{posts.blogtitle}}</h2></a>
+<p>{{posts.blogcontent}}</p>
+<p>written by <a href='/blog?owner={{posts.owner.username}}'>{{posts.owner.username}}</a>  </p>
 <hr />
 
-</form>
-
-{% endfor %} -->
-
-{% endif %}
+{% endfor %}
 
 {% endblock %}

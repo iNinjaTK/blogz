@@ -16,9 +16,9 @@
 <ul>
 
 {% for author in users %}
-<form method="POST">
-<a href='/blog?user={{author.id}}'><li>{{author.username}}</li></a>
-</form>
+
+<a href='/blog?owner={{author.username}}'><li>{{author.username}}</li></a>
+
 
 {% endfor %}
 

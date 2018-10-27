@@ -45,9 +45,12 @@ def index():
         title=owner,
         entries=entries,
         owner=owner)
-        
-        
-
+    if request.method == 'GET' and request.args.get('owner'):
+        owner = User.query.filter_by(username=request.args.get('owner')).first()
+        entries = Entry.query.filter_by(owner_id=owner.id).all()
+        return render_template('authorpage.html',
+        title='Blog Posts',
+        entries=entries)
     else:
         users = User.query.all()
         return render_template('index.html',
@@ -198,8 +201,9 @@ def blog():
         title=entry.blogtitle,
         content=entry.blogcontent,
         owner=entry.owner.username)
-    if request.method == 'GET' and request.args.get('user'):
-        entries = Entry.query.filter_by(owner_id=request.args.get('user'))
+    if request.method == 'GET' and request.args.get('owner'):
+        owner = User.query.filter_by(username=request.args.get('owner')).first()
+        entries = Entry.query.filter_by(owner_id=owner.id).all()
         return render_template('authorpage.html',
         title='Blog Posts',
         entries=entries)
