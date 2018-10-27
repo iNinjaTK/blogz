@@ -157,7 +157,7 @@ def signup():
 @app.route('/logout')
 def logout():
     del session['username']
-    return redirect('/blog')
+    return redirect('/')
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
@@ -182,7 +182,7 @@ def newpost():
             return render_template('postpage.html',
             title=new_entry.blogtitle,
             content=new_entry.blogcontent,
-            owner=owner)
+            owner=owner.username)
         else:
             return render_template('newpost.html',
             title='Add a Blog',
