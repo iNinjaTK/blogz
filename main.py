@@ -33,6 +33,7 @@ class User(db.Model):
 def require_login():
     allowed_routes = ['login', 'blog', 'index', 'signup']
     if request.endpoint not in allowed_routes and 'username' not in session:
+        flash("Please log in to Blogz to view this page")
         return redirect('/login')
 
 @app.route('/', methods=['GET'])
@@ -157,6 +158,7 @@ def signup():
 @app.route('/logout')
 def logout():
     del session['username']
+    flash("Logged Out")
     return redirect('/')
 
 @app.route('/newpost', methods=['POST', 'GET'])

@@ -2,8 +2,6 @@
 
 {% block content %}
 
-<h1>It's working alright</h1>
-
 {% for posts in entries %}
 <a href='/blog?id={{posts.id}}'><h2>{{posts.blogtitle}}</h2></a>
 <p>{{posts.blogcontent}}</p>
