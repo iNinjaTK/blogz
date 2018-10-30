@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, session, flash
+from flask import Flask, request, redirect, render_template, session, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -185,7 +185,6 @@ def newpost():
             owner=owner.username)
         else:
             return render_template('newpost.html',
-            title='Add a Blog',
             blogtitle=blogtitle,
             blogcontent=blogcontent,
             blogtitle_error=blogtitle_error,

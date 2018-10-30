@@ -1,0 +1,32 @@
+.error {
+    color: red;
+}
+
+/* navigation bar */
+
+.navi-bar {
+    list-style-type: none;
+    background-color: aliceblue
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.text {
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.text:hover {
+    background-color: antiquewhite
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}

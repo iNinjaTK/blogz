@@ -12,18 +12,14 @@
 </p>
 
 {% else %}
-
 <ul>
-
 {% for author in users %}
-
-<a href='/blog?owner={{author.username}}'><li>{{author.username}}</li></a>
-
+<li>
+<a href='/blog?owner={{author.username}}'>{{author.username}}</a>
+</li>
 
 {% endfor %}
-
 </ul>
-
 {% endif %}
 
 {% endblock %}
