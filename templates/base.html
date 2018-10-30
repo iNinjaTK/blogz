@@ -5,17 +5,20 @@
         <title>{{title}}</title>
     </head>
     <body>
+
+        <div>
         <ul class="navi-bar">
             <li class="text left"><a href='/'>Home</a></li>
             <li class="text left"><a href='/blog'>Main Blog Page</a></li>
             <li class="text left"><a href='/newpost'>Add a Blog Entry</a></li>
-
-            <li class="text right"><a href='/login'>Log In</a></li>
-
+        {% if 'username' in session %}
             <li class="text right"><a href='/logout'>Log Out</a></li>
-
-
+        {% else %}
+            <li class="text right"><a href='/login'>Log In</a></li>
+        {% endif %}
         </ul>
+        </div>
+
         <h1>{{title}}</h1>
 
         {% with messages = get_flashed_messages() %}
